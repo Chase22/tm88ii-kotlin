@@ -1,11 +1,11 @@
 package de.chasenet.receipt
 
 data class PrintMode(
-    val characterFont: Boolean,
-    val emphasizedMode: Boolean,
-    val doubleHeightMode: Boolean,
-    val doubleWidthMode: Boolean,
-    val underlineMode: Boolean
+    val characterFont: Boolean = false,
+    val emphasizedMode: Boolean = false,
+    val doubleHeightMode: Boolean = false,
+    val doubleWidthMode: Boolean = false,
+    val underlineMode: Boolean = false
 ) {
     fun toByte(): Byte {
         val value = characterFont.toInt() or

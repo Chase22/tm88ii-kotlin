@@ -5,8 +5,11 @@ import com.fazecast.jSerialComm.SerialPortDataListener
 import com.fazecast.jSerialComm.SerialPortEvent
 
 fun main() {
-    SerialPort.getCommPorts().forEach { println("${it.systemPortName}: ${it.descriptivePortName}") }
-    val port = SerialPort.getCommPort("tty.usbmodem2101")
+   val port = SerialPort.getCommPorts()
+       .firstOrNull {
+           it.descriptivePortName.contains("Arduino Leonardo") && it.systemPortName.startsWith("tty")
+       } ?: throw IllegalStateException("Cannot find arduino")
+
     port.setComPortParameters(9600, 8, SerialPort.TWO_STOP_BITS, SerialPort.ODD_PARITY)
 
     port.setComPortTimeouts(
@@ -20,23 +23,19 @@ fun main() {
     }
     val printer = Printer(port)
 
-    printer.initializePrinter()
-
-    printer.selectPrintMode(
-        PrintMode(
-            characterFont = false,
-            emphasizedMode = true,
-            doubleHeightMode = false,
-            doubleWidthMode = true,
-            underlineMode = false
-        )
-    )
-    printer.printLine("A")
-    printer.resetPrintMode()
-    printer.setReversePrintingMode(true)
-    printer.printLine("AAAAA")
-    printer.cutPaper()
-    printer.kickDrawer()
+    printer.print {
+        center {
+            withPrintMode(PrintMode(
+                doubleHeightMode = true,
+                doubleWidthMode = true,
+                emphasizedMode = true,
+                underlineMode = true
+            )) {
+                print("TEST")
+            }
+        }
+        cutPaper()
+    }
 
     Thread.sleep(1000)
 

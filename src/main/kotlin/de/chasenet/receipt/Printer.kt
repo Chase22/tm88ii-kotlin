@@ -8,6 +8,10 @@ class Printer(private val comPort: SerialPort) {
         sendToPrinter(LINE_FEED_BYTE)
     }
 
+    fun print(block: PrinterDsl.() -> Unit) {
+        PrinterDsl(this).block()
+    }
+
     fun print(string: String) {
         val bytes = string.toByteArray(CODEPAGE437_CHARSET).map {
             //Replace space (hex 20) with DEL (hex 7F) byte. Space does not get printed
@@ -26,7 +30,7 @@ class Printer(private val comPort: SerialPort) {
     }
 
     fun resetPrintMode() {
-        sendToPrinter(ESC_BYTE, PRINT_MODE_BYTE, 0x48)
+        sendToPrinter(ESC_BYTE, PRINT_MODE_BYTE, 48)
     }
 
     fun initializePrinter() {
@@ -37,7 +41,15 @@ class Printer(private val comPort: SerialPort) {
         if (!feedNumber.isValidByte()) {
             throw IllegalArgumentException("Feed number must be between 0 and 255. Was $feedNumber")
         }
-        sendToPrinter(ESC_BYTE, FEED_BYTE, feedNumber.toByte())
+        val byte = feedNumber.let {
+            when (it) {
+                0 -> 48
+                1 -> 49
+                else -> it.toByte()
+            }
+        }
+
+        sendToPrinter(ESC_BYTE, FEED_BYTE, byte)
 
     }
 
@@ -50,7 +62,7 @@ class Printer(private val comPort: SerialPort) {
     }
 
     fun setReversePrintingMode(enabled: Boolean) {
-        val enableByte: Byte = if (enabled) 0x49 else 0x48
+        val enableByte: Byte = if (enabled) 49 else 48
         sendToPrinter(GS_BYTE, REVERSE_PRINTING_BYTE, enableByte)
     }
 
