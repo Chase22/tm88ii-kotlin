@@ -6,7 +6,7 @@ plugins {
     `maven-publish`
 }
 
-group = "de.chasenet"
+group = "com.github.chase22"
 version = "1.0-SNAPSHOT"
 
 repositories {
