@@ -1,3 +1,3 @@
 
-rootProject.name = "ReceiptPrinterDriver"
+rootProject.name = "TM88II"
 

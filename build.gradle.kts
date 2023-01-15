@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.7.21"
+    `java-library`
+    `maven-publish`
 }
 
 group = "de.chasenet"
@@ -13,7 +15,6 @@ repositories {
 
 dependencies {
     implementation("com.fazecast:jSerialComm:2.9.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
     testImplementation(kotlin("test"))
 }
@@ -23,5 +24,20 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("tm88ii") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            name = "myRepo"
+            url = uri(layout.buildDirectory.dir("repo"))
+        }
+    }
 }
