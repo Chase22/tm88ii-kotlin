@@ -61,9 +61,25 @@ class Printer(private val comPort: SerialPort) {
         sendToPrinter(ESC_BYTE, SET_JUSTIFICATION_BYTE, justification.value)
     }
 
+    fun setUnderlineMode(underlineMode: UnderlineMode) {
+        sendToPrinter(ESC_BYTE, UNDERLINE_BYTE, underlineMode.value)
+    }
+
     fun setReversePrintingMode(enabled: Boolean) {
-        val enableByte: Byte = if (enabled) 49 else 48
-        sendToPrinter(GS_BYTE, REVERSE_PRINTING_BYTE, enableByte)
+        setMode(REVERSE_PRINTING_BYTE, enabled)
+    }
+
+    fun setEmphasisMode(enabled: Boolean) {
+        setMode(EMPHASIS_BYTE, enabled)
+    }
+
+    fun setDoubleStrikeMode(enabled: Boolean) {
+        setMode(DOUBLE_STRIKE_BYTE, enabled)
+    }
+
+    private fun setMode(modeByte: Byte, enabled: Boolean) {
+        val enableByte: Byte = enabled.toByte(49, 48)
+        sendToPrinter(GS_BYTE, modeByte, enableByte)
     }
 
     fun cutPaper(offset: Int = 0) {
@@ -97,8 +113,13 @@ class Printer(private val comPort: SerialPort) {
         private const val GS_BYTE = 0x1D.toByte()
 
         private const val REVERSE_PRINTING_BYTE = 0x42.toByte()
-        private const val CUT_PAPER_BYTE = 0x56.toByte()
+        private const val EMPHASIS_BYTE = 0x45.toByte()
+        private const val DOUBLE_STRIKE_BYTE = 0x48.toByte()
+
         private const val SET_JUSTIFICATION_BYTE = 0x61.toByte()
+        private const val UNDERLINE_BYTE = 0x2D.toByte()
+
+        private const val CUT_PAPER_BYTE = 0x56.toByte()
         private const val FEED_BYTE = 0x64.toByte()
         private const val GENERATE_PULSE_BYTE = 0x70.toByte()
 

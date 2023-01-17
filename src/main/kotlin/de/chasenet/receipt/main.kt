@@ -49,13 +49,3 @@ fun main() {
     port.flushIOBuffers()
     port.closePort()
 }
-
-fun SerialPort.listenForStatus(body: (PrinterStatus) -> Unit) {
-    addDataListener(object : SerialPortDataListener {
-        override fun getListeningEvents(): Int = SerialPort.LISTENING_EVENT_DATA_AVAILABLE
-
-        override fun serialEvent(event: SerialPortEvent) {
-            event.receivedData.map { PrinterStatus(it.toInt()) }.forEach(body)
-        }
-    })
-}

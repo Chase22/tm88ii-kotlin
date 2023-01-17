@@ -17,5 +17,3 @@ data class PrintMode(
         return value.toByte()
     }
 }
-
-fun Boolean.toInt(trueValue: Int = 1) = if (this) trueValue else 0

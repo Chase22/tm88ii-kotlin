@@ -36,6 +36,24 @@ class PrinterDsl(private val printer: Printer) {
         printer.setReversePrintingMode(false)
     }
 
+    fun doubleStrike(block: PrinterDsl.() -> Unit) {
+        printer.setDoubleStrikeMode(true)
+        block()
+        printer.setDoubleStrikeMode(false)
+    }
+
+    fun emphasis(block: PrinterDsl.() -> Unit) {
+        printer.setEmphasisMode(true)
+        block()
+        printer.setEmphasisMode(false)
+    }
+
+    fun withUnderLine(underlineMode: UnderlineMode, block: PrinterDsl.() -> Unit) {
+        printer.setUnderlineMode(underlineMode)
+        block()
+        printer.setUnderlineMode(UnderlineMode.OFF)
+    }
+
     fun cutPaper() {
         printer.cutPaper(5)
     }
