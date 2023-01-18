@@ -1,8 +1,6 @@
 package de.chasenet.receipt
 
 import com.fazecast.jSerialComm.SerialPort
-import com.fazecast.jSerialComm.SerialPortDataListener
-import com.fazecast.jSerialComm.SerialPortEvent
 
 fun main() {
    val port = SerialPort.getCommPorts()
@@ -23,19 +21,10 @@ fun main() {
     }
     val printer = Printer(port)
 
-    printer.print {
-        center {
-            withPrintMode(PrintMode(
-                doubleHeightMode = true,
-                doubleWidthMode = true,
-                emphasizedMode = true,
-                underlineMode = true
-            )) {
-                print("TEST")
-            }
-        }
-        cutPaper()
-    }
+//    printer.sendToPrinter(0x1B, 0x74, 19)
+//    printer.sendToPrinter(0xd5.toByte(), Printer.LINE_FEED_BYTE)
+
+    printer.printTestPage()
 
     Thread.sleep(1000)
 
