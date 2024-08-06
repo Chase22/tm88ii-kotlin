@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation("com.fazecast:jSerialComm:2.9.3")
+    implementation("com.github.anastaciocintra:escpos-coffee:4.1.0")
 
     testImplementation(kotlin("test"))
 }

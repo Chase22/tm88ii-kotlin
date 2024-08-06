@@ -1,9 +1,8 @@
 package de.chasenet.receipt
 
-import com.fazecast.jSerialComm.SerialPort
 import java.nio.charset.Charset
 
-class Printer(private val comPort: SerialPort) {
+class Printer(private val port: Port) {
     fun lineFeed() {
         sendToPrinter(LINE_FEED_BYTE)
     }
@@ -99,12 +98,18 @@ class Printer(private val comPort: SerialPort) {
         sendToPrinter(GS_BYTE, CUT_PAPER_BYTE, 66, byte)
     }
 
+    fun printImageLine(byte: Byte) {
+        sendToPrinter(
+            ESC_BYTE, PRINT_BITMAP_BYTE, 0x48, 0x49, 0x49, byte
+        )
+    }
+
     fun sendToPrinter(vararg bytes: Byte) {
         writeByteArrayToPrinter(bytes.toTypedArray().toByteArray())
     }
 
-    fun writeByteArrayToPrinter(bytes: ByteArray) {
-        comPort.writeBytes(bytes, bytes.size.toLong())
+    private fun writeByteArrayToPrinter(bytes: ByteArray) {
+        port.writeBytes(bytes)
     }
 
     companion object {
@@ -122,6 +127,8 @@ class Printer(private val comPort: SerialPort) {
         private const val CUT_PAPER_BYTE = 0x56.toByte()
         private const val FEED_BYTE = 0x64.toByte()
         private const val GENERATE_PULSE_BYTE = 0x70.toByte()
+
+        private const val PRINT_BITMAP_BYTE = 0x2A.toByte()
 
         const val LINE_FEED_BYTE = 0x0A.toByte()
         private const val PRINT_MODE_BYTE = 0x21.toByte()
